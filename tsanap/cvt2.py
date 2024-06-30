@@ -6,17 +6,31 @@
 import numpy as np, cv2, random as rd, copy, time, os
 from sty import Style, RgbFg, fg
 
-from path_functs import *
-from terminal import *
-from couleurs import *
-from calculs import *
-from _vars_ import *
-import pip
+try: from path_functs import *
+except: from tsanap.path_functs import *
+
+try: from terminal import *
+except: from tsanap.terminal import *
+
+try: from couleurs import *
+except: from tsanap.couleurs import *
+
+try: from calculs import *
+except: from tsanap.calculs import *
+
+try: from _vars_ import *
+except: from tsanap._vars_ import *
+
+try: import pip
+except: import tsanap.pip
+
 try: os.environ["XDG_SESSION_TYPE"] = "xcb"
 except: pass
+
 def debug(*args, **kwargs) -> None:
     '''Just a print function with another name.'''
     return print(*args, **kwargs)
+
 def fusionImages(img, img_base, pos=[0, 0]):
     '''
     Prend:
@@ -42,14 +56,17 @@ def fusionImages(img, img_base, pos=[0, 0]):
                 if y<0 or y>=len(img_base): continue
                 img_base[y,x] = img[y_,x_]
         return img_base
+
 class image:
     class boutton:
         def __init__(self, nom='-', coos=[[0, 0], []]) -> None:
             self.nom = nom
             self.coos = coos
-            return None
+            return
+
     def new_img(self=None, dimensions=screen, fond=[256 for _ in range(3)]) -> np.array:
-        return(np.full([round(v) for v in dimensions[::-1]]+[3], fond[::-1], np.uint8))
+        return np.full([round(v) for v in dimensions[::-1]]+[3], fond[::-1], np.uint8)
+
     def __init__(self, nom='image_python', img=None) -> None:
         self.nom = nom
         if type(img) == type(None):
@@ -57,14 +74,16 @@ class image:
         elif type(img) == image:
             img = img.img
         self.img = np.array(img)
-        return None
-    def agrandis_img(self, cmb=2):
+        return
+
+    def agrandis_img(self, cmb=2) -> None:
         img = np.array([[[0,0,0] for x in range(len(self.img[0])*cmb)] for y in range(len(self.img)*cmb)])
         for y in range(len(img)):
             for x in range(len(img[0])):
                 img[y,x] = self.img[y//cmb,x//cmb]
         self.img = img
-        return(None)
+        return
+
     def __str__(self, ordre=True) -> str:
         img_str = ''
         n = 0
@@ -85,7 +104,8 @@ class image:
             img_str += '\n'
         img_str += fg.custom+fg.rs
         print(' '*20, end='\r')
-        return(img_str)
+        return img_str
+
     def montre(self, attente=0, destroy=False, fullscreen=False) -> int:
         '''
         In:
@@ -103,20 +123,21 @@ class image:
         cv2.imshow(self.nom, np.array(self.img, np.uint8))
         wk = cv2.waitKeyEx(attente)
         if destroy == True: cv2.destroyWindow(self.nom)
-        return(wk)
-    def ferme(self):
+        return wk
+
+    def ferme(self) -> None:
         cv2.destroyWindow(self.nom)
     def imprime(self, ordre=True) -> None:
         print(self.__str__(ordre), end='')
-        return None
+        return
     def ligne(self, p1, p2, col=col.noir, ep=1, lineType=0) -> None:
         p1, p2 = [round(p) for p in p1], [round(p) for p in p2]; ep=round(ep)
         cv2.line(self.img, p1, p2, col[::-1], ep, [cv2.LINE_4, cv2.LINE_8, cv2.LINE_AA][lineType%3])
-        return None
+        return
     def rectangle(self, p1, p2, col=col.noir, ep=1, lineType=0) -> None:
         p1, p2 = [round(p) for p in p1], [round(p) for p in p2]; ep=round(ep)
         cv2.rectangle(self.img, p1, p2, col[::-1], ep if ep != 0 else -1, [cv2.LINE_4, cv2.LINE_8, cv2.LINE_AA][lineType%3])
-        return None
+        return
     def triangle(self, p1=ct_sg(p3, ct), p2=ct_sg(p4, ct), p3=ct_sg(ct, ch), couleur=col.noir, epaisseur=1, lineType=0):
         lineType = [cv2.LINE_4, cv2.LINE_8, cv2.LINE_AA][lineType%3]
         couleur = couleur[::-1]
@@ -137,15 +158,15 @@ class image:
         cv2.line(img, p2, p3, couleur, epaisseur, lineType)
         cv2.line(img, p3, p1, couleur, epaisseur, lineType)
         self.img = img
-        return None
+        return
     def cercle(self, ct, rayon=10, col=col.noir, ep=1, lineType=0) -> None:
         ct = [round(p) for p in ct]; ep = round(ep)
         cv2.circle(self.img, ct, round(rayon), col[::-1], ep if ep != 0 else -1, [cv2.LINE_4, cv2.LINE_8, cv2.LINE_AA][lineType%3])
-        return None
+        return
     def ellipse(self, ct, rayons=[10, 10], col=col.noir, ep=1, lineType=0, anD=0, anF=360, ang=0) -> None:
         ct = [round(p) for p in ct]; ep = round(ep)
         cv2.ellipse(self.img, ct, [round(i) for i in rayons], ang, anD, anF, col[::-1], ep if ep != 0 else -1, [cv2.LINE_4, cv2.LINE_8, cv2.LINE_AA][lineType%3])
-        return None
+        return
     def sauve_image(self, path='', nom_fichier=None) -> None:
         if nom_fichier == None: nom_fichier = self.nom
         if path != '':
@@ -154,16 +175,16 @@ class image:
         print(nom_fichier)
         cv2.imwrite(nom_fichier, self.img)
         if path != '': os.chdir(r)
-        return None
+        return
     def ouvre_image(self, chemin) -> None:
         stream = open(f'{chemin}', "rb")
         bytes = bytearray(stream.read())
         numpyarray = np.asarray(bytes, dtype=np.uint8)
         self.img = cv2.imdecode(numpyarray, cv2.IMREAD_UNCHANGED)
-        return None
+        return
     def set_img(self, img) -> None:
         self.img = np.array(img, np.uint8)
-        return None
+        return
     def ecris(self, texte, ct, couleur=col.red, epaisseur=1, taille=1, police=cv2.FONT_HERSHEY_SCRIPT_COMPLEX, lineType=0) -> None:
         if True: ## Vars ##
             x1, y1 = ct
@@ -180,7 +201,7 @@ class image:
             y = round(yyy+tailles[1]/2)
             yy = y + i*tailles[0][1]*2
             cv2.putText(self.img, line, (x, yy), police, taille, couleur[::-1], epaisseur, [cv2.LINE_4, cv2.LINE_8, cv2.LINE_AA][lineType%3])
-        return None
+        return
 
 class layout:
     class frame_:
@@ -188,11 +209,13 @@ class layout:
             self.name = name
             self.img = image(img=copy.deepcopy(img))
             self.pos = pos
+            return
         def __str__(self) -> str:
             return self.name
     def __init__(self, img=image.new_img(), frames=[]) -> None:
         self.img = image(img=copy.deepcopy(img))
         self.frames = frames
+        return
     def frame(self, img=image.new_img(fond=col.white, dimensions=[100, 100]), pos=[0,0], name=None):
         if name == None:
             name = 'frame' + str(len(self.frames))

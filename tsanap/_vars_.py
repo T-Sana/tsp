@@ -1,4 +1,5 @@
-from calculs import *
+try: from calculs import *
+except: from tsanap.calculs import *
 haut = 1080
 long = 1920
 screen = [long, haut]
