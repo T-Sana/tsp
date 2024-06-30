@@ -5,7 +5,7 @@ DESCRIPTION = 'T-Sana\'s package'
 LONG_DESCRIPTION = 'A package to create images, manage files and more.'
 
 setup(
-        name="t_sana_s_package", 
+        name="tsanap", 
         version=VERSION,
         author="T-Sana",
         author_email="tsana.code@gmail.com",
