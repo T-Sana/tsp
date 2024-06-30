@@ -202,6 +202,9 @@ class image:
             yy = y + i*tailles[0][1]*2
             cv2.putText(self.img, line, (x, yy), police, taille, couleur[::-1], epaisseur, [cv2.LINE_4, cv2.LINE_8, cv2.LINE_AA][lineType%3])
         return
+    def is_closed(self) -> bool:
+        '''Detect if the window is currently closed'''
+        return cv2.getWindowProperty(self.nom,cv2.WND_PROP_VISIBLE)<1
 
 class layout:
     class frame_:
