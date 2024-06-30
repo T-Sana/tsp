@@ -239,7 +239,7 @@ class layout:
                 img.rectangle(frame.pos, [frame.pos[0]+len(frame.img.img[0]), frame.pos[1]+len(frame.img.img)], col.red, 3)
         return img.montre(1, fullscreen=True)
     def is_closed(self) -> bool:
-        '''Detect if the window is currently closed'''
+        '''Detect if the layout is currently closed'''
         return cv2.getWindowProperty(self.nom,cv2.WND_PROP_VISIBLE)<1
     
 
