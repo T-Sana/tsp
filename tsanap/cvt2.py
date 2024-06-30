@@ -120,6 +120,9 @@ class image:
         if fullscreen:
             cv2.namedWindow(self.nom, cv2.WND_PROP_FULLSCREEN)
             cv2.setWindowProperty(self.nom, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+        else:
+            cv2.namedWindow(self.nom, cv2.WND_PROP_FULLSCREEN)
+            cv2.setWindowProperty(self.nom, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_KEEPRATIO)
         cv2.imshow(self.nom, np.array(self.img, np.uint8))
         wk = cv2.waitKeyEx(attente)
         if destroy == True: cv2.destroyWindow(self.nom)
