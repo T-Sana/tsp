@@ -77,13 +77,18 @@ class image:
         return
 
     def agrandis_img(self, cmb=2) -> None:
+        '''
+        Deprecated!
+        -----------
+        '''
         img = np.array([[[0,0,0] for x in range(len(self.img[0])*cmb)] for y in range(len(self.img)*cmb)])
         for y in range(len(img)):
             for x in range(len(img[0])):
                 img[y,x] = self.img[y//cmb,x//cmb]
         self.img = img
         return
-
+    def size(self) -> [int, int]:
+        return [len(self.img), len(self.img[0])]
     def __str__(self, ordre=True) -> str:
         img_str = ''
         n = 0
@@ -230,7 +235,7 @@ class layout:
         fenetre = self.frame_(img=img, pos=pos, name=name)
         self.frames.append(fenetre)
         return fenetre
-    def montre(self, debug=False, frames=None, except_frames=[]):
+    def montre(self, bords=False, frames=None, except_frames=[]):
         img = image(self.nom, img=copy.deepcopy(self.img.img))
         if frames == None: frames = copy.deepcopy(self.frames)
         for frm in except_frames:
@@ -238,12 +243,14 @@ class layout:
             if ind != -1: frames.pop(ind)
         for frame in frames:
             img.img = fusionImages(frame.img.img, img.img, frame.pos)
-            if debug:
-                img.rectangle(frame.pos, [frame.pos[0]+len(frame.img.img[0]), frame.pos[1]+len(frame.img.img)], col.red, 3)
+            if type(bords)==col:
+                img.rectangle(frame.pos, [frame.pos[0]+len(frame.img.img[0]), frame.pos[1]+len(frame.img.img)], bords, 3)
         return img.montre(1, fullscreen=True)
     def is_closed(self) -> bool:
         '''Detect if the layout is currently closed'''
         return cv2.getWindowProperty(self.nom,cv2.WND_PROP_VISIBLE)<1
+    def size(self) -> [int, int]:
+        return self.img.size()
     
 
 if __name__ == '__main__':
