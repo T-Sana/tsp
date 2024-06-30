@@ -241,10 +241,14 @@ class layout:
         for frm in except_frames:
             ind = [i.name for i in frames].index(frm.name)
             if ind != -1: frames.pop(ind)
+        cont = True
         for frame in frames:
             img.img = fusionImages(frame.img.img, img.img, frame.pos)
-            if type(bords)==col:
-                img.rectangle(frame.pos, [frame.pos[0]+len(frame.img.img[0]), frame.pos[1]+len(frame.img.img)], bords, 3)
+            if cont and type(bords) in [list, tuple]:
+                for i in set(type(i) for i in bords):
+                    print(set(type(i) for i in bords))
+                    if i not in [int, float]: cont=False
+                if cont: img.rectangle(frame.pos, [frame.pos[0]+len(frame.img.img[0]), frame.pos[1]+len(frame.img.img)], bords, 3)
         return img.montre(1, fullscreen=fullscreen)
     def is_closed(self) -> bool:
         '''Detect if the layout is currently closed'''
