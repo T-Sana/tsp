@@ -246,7 +246,6 @@ class layout:
             img.img = fusionImages(frame.img.img, img.img, frame.pos)
             if cont and type(bords) in [list, tuple]:
                 for i in set(type(i) for i in bords):
-                    print(set(type(i) for i in bords))
                     if i not in [int, float]: cont=False
                 if cont: img.rectangle(frame.pos, [frame.pos[0]+len(frame.img.img[0]), frame.pos[1]+len(frame.img.img)], bords, 3)
         return img.montre(1, fullscreen=fullscreen)
