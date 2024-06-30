@@ -11,6 +11,22 @@ def n_entre(n, mi, ma) -> bool:
     ``bool``: is n between mi and ma?
     '''
     return mi if n < mi else ma if n > ma else n
+def decoupe(string):
+    '''
+    Prend:
+    ------
+    :nombre: ``complex`` ou ``str(complex)``\n
+    Renvoie:
+    --------
+    ``float``
+    '''
+    out = ''
+    for i in str(string):
+        match i:
+            case '('|')':pass
+            case 'j':break
+            case _:out+=i
+    return float(out)
 def ct_sg(pt1, pt2):
     '''
     Prend:
@@ -52,27 +68,9 @@ def pt_sg(p1, p2, m1=1, m2=1):
     if m1 + m2 == 0: return(0, 0)
     pt = ((p1[n] * m1 + p2[n] * m2) / (m1+m2) for n in [0, 1])
     return [round(i) for i in pt]
-def decoupe(string):
-    '''
-    Prend:
-    ------
-    :nombre: ``complex`` ou ``str(complex)``\n
-    Renvoie:
-    --------
-    ``float``
-    '''
-    out = ''
-    string = str(string)
-    for i in string:
-        if  i == '(':
-            pass
-        elif i == ')':
-            pass
-        elif i == 'j':
-            break
-        else:
-            out += i
-    return float(out)
+def cts(pts):
+    p1, p2, p3, p4 = pts
+    return [ct_sg(p1, p2), ct_sg(p3, p4), ct_sg(p1, p3), ct_sg(p2, p4)]
 def coosCercle(ct, rayon:int | float, angle, tipe="int"):
     '''
     Prend:
@@ -90,6 +88,14 @@ def coosCercle(ct, rayon:int | float, angle, tipe="int"):
     if tipe=='float':
         return [ct[0] + cos * rayon, ct[1] + sin * rayon]
     return [int(ct[0] + cos * rayon), int(ct[1] + sin * rayon)]
+def coosEllipse(ct, rayons, angle):
+    b, a = rayons
+    p1, p2 = coosCercle(ct, min(a, b), angle), coosCercle(ct, max(a, b), angle)
+    x, y = p1[0] - p2[0], p1[1] - p2[1]
+    p3 = (p1[0] - x, p1[1])
+    p4 = (p1[0], p1[1] - y)
+    if a < b: return(p3)
+    else: return(p4)
 def dist(p1, p2):
     '''
     Calcule la distance entre p1 et p2
@@ -103,7 +109,7 @@ def dist(p1, p2):
     return dist
 def angleEntrePoints(p1, p2):
     '''
-    Calcule l'angle' entre p1 et p2
+    Calcule l'angle entre p1 et p2
     '''
     x1, y1 = p1
     x2, y2 = p2
@@ -152,8 +158,6 @@ def points_segment(p1, p2):
     '''
     xa, ya = p1
     xb, yb = p2
-    '''xa, ya = int(xa), int(ya)
-    xb, yb = int(xb), int(yb)'''
     if xa == xb:
         dif = ya - yb
         numbs = range(abs(dif))
@@ -220,11 +224,3 @@ def moyenne(elementA, elementB, mult_elementA=1, mult_elementB=1, return_type='f
 def clicked_in(pos, boutton):
     a_l_interieur = pos[0] >= boutton[0][0] and pos[0] <= boutton[1][0] and pos[1] >= boutton[0][1] and pos[1] <= boutton[1][1]
     return(a_l_interieur)
-def coosEllipse(ct, rayons, angle):
-    b, a = rayons
-    p1, p2 = coosCercle(ct, min(a, b), angle), coosCercle(ct, max(a, b), angle)
-    x, y = p1[0] - p2[0], p1[1] - p2[1]
-    p3 = (p1[0] - x, p1[1])
-    p4 = (p1[0], p1[1] - y)
-    if a < b: return(p3)
-    else: return(p4)
