@@ -1,1 +1,2 @@
-from cvt2 import *
+try: from cvt2 import *
+except: from tsanap.cvt2 import *
