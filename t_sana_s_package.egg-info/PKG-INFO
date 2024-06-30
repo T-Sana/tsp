@@ -1,0 +1,15 @@
+Metadata-Version: 2.1
+Name: t_sana_s_package
+Version: 0.0.1
+Summary: T-Sana's package
+Author: T-Sana
+Author-email: tsana.code@gmail.com
+Keywords: python,image
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: Linux :: Fedora
+Classifier: Operating System :: Microsoft :: Windows
+Requires-Dist: numpy
+Requires-Dist: opencv-python
+Requires-Dist: sty
+
+A package to create images, manage files and more.
