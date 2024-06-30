@@ -235,7 +235,7 @@ class layout:
         fenetre = self.frame_(img=img, pos=pos, name=name)
         self.frames.append(fenetre)
         return fenetre
-    def montre(self, bords=False, frames=None, except_frames=[]):
+    def montre(self, bords=False, frames=None, except_frames=[], fullscreen=True):
         img = image(self.nom, img=copy.deepcopy(self.img.img))
         if frames == None: frames = copy.deepcopy(self.frames)
         for frm in except_frames:
@@ -245,7 +245,7 @@ class layout:
             img.img = fusionImages(frame.img.img, img.img, frame.pos)
             if type(bords)==col:
                 img.rectangle(frame.pos, [frame.pos[0]+len(frame.img.img[0]), frame.pos[1]+len(frame.img.img)], bords, 3)
-        return img.montre(1, fullscreen=True)
+        return img.montre(1, fullscreen=fullscreen)
     def is_closed(self) -> bool:
         '''Detect if the layout is currently closed'''
         return cv2.getWindowProperty(self.nom,cv2.WND_PROP_VISIBLE)<1
