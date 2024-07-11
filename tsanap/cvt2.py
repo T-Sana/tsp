@@ -132,6 +132,8 @@ class image:
         wk = cv2.waitKeyEx(attente)
         if destroy == True: cv2.destroyWindow(self.nom)
         return wk
+    def close(self) -> None:
+        return cv2.destroyWindow(self.nom)
     def copy(self): return image(img=copy.deepcopy(self.img))
     def visual_input(self, texte, ct, couleur=col.red, epaisseur=1, taille=1, police=cv2.FONT_HERSHEY_SCRIPT_COMPLEX, lineType=0, fullscreen=False) -> str | None:
         tin = "" # Text input
