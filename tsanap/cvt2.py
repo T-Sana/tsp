@@ -87,8 +87,8 @@ class image:
                 img[y,x] = self.img[y//cmb,x//cmb]
         self.img = img
         return
-    def size(self) -> [int, int]:
-        return [len(self.img), len(self.img[0])]
+    def size(self, rev=False) -> [int, int]:
+        return [len(self.img[0]), len(self.img)][::-1 if rev else 1] ## reverse True means [y,x] while False is [x,y]
     def __str__(self, ordre=True) -> str:
         img_str = ''
         n = 0
