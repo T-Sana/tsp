@@ -63,10 +63,8 @@ class image:
             self.nom = nom
             self.coos = coos
             return
-
     def new_img(self=None, dimensions=screen, fond=[256 for _ in range(3)]) -> np.array:
         return np.full([round(v) for v in dimensions[::-1]]+[3], fond[::-1], np.uint8)
-
     def __init__(self, nom='image_python', img=None) -> None:
         self.nom = nom
         if type(img) == type(None):
@@ -75,7 +73,6 @@ class image:
             img = img.img
         self.img = np.array(img)
         return
-
     def agrandis_img(self, cmb=2) -> None:
         '''
         Deprecated!
@@ -110,7 +107,6 @@ class image:
         img_str += fg.custom+fg.rs
         print(' '*20, end='\r')
         return img_str
-
     def montre(self, attente=0, destroy=False, fullscreen=False) -> int:
         '''
         In:
@@ -209,6 +205,15 @@ class image:
     def ellipse(self, ct, rayons=[10, 10], col=col.noir, ep=1, lineType=0, anD=0, anF=360, ang=0) -> None:
         ct = [round(p) for p in ct]; ep = round(ep)
         cv2.ellipse(self.img, ct, [round(i) for i in rayons], ang, anD, anF, col[::-1], ep if ep != 0 else -1, [cv2.LINE_4, cv2.LINE_8, cv2.LINE_AA][lineType%3])
+        return
+    def arc(self, pa, pb, sagitta, col=col.noir, ep=1, lineType=0) -> None:
+        if sagitta == 0: return self.ligne(pa, pb, col, ep, lineType)
+        elif sagitta > 0:
+            a = angleEntrePoints(pa, pb)
+        else:
+            a = angleEntrePoints(pa, pb) + 180; sagitta = abs(sagitta)
+        ct = ct_sg(pa, pb)
+        img.ellipse(ct, [dist(pa, pb)/2, sagitta], col, ep, lineType, 0, 180, a)
         return
     def sauve_image(self, path='', nom_fichier=None) -> None:
         if nom_fichier == None: nom_fichier = self.nom
