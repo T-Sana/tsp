@@ -215,6 +215,36 @@ class image:
         ct = ct_sg(pa, pb)
         self.ellipse(ct, [dist(pa, pb)/2, sagitta], col, ep, lineType, 0, 180, a)
         return
+    def arc2(self, pa, pb, sagitta, col=col.noir, ep=1, lineType=0) -> None:
+        s=sagitta
+        if s==0:return self.ligne(pa,pb,col,ep,lineType)
+        elif s>0:a=angleEntrePoints(pa,pb)
+        else:a=angleEntrePoints(pa,pb)+180;s=abs(s)
+        ct=ct_sg(pa,pb);d=dist(pa,pb)
+        ctc = coosCercle(ct, s*2, a+90)
+        
+        r = d/2+s
+        self.cercle(ct,8,[255,0,0],0,2) ## ct ##
+        self.cercle(ctc,r,col,ep/3,2)
+        
+        return
+    def parabole(self, a=1, b=0, c=0, puissance=2, couleur=col.bleu, epaisseur=10): ## TODO !!! ##
+        p = puissance
+        b = 0 - b
+        pt = long/2, haut/2
+        xct = pt[0]
+        x = -xct - 10
+        yct = pt[1]
+        save = []
+        while x <= xct:
+            save.append([x + xct, yct - (a * (x ** p) + b * x + c)])
+            if len(save) > 2:
+                try:
+                    self.ligne(save[-2], save[-1], couleur, epaisseur)
+                except:
+                    pass
+            x += 1
+        return
     def sauve_image(self, path='', nom_fichier=None) -> None:
         if nom_fichier == None: nom_fichier = self.nom
         if path != '':
@@ -295,12 +325,68 @@ class layout:
     def size(self) -> [int, int]:
         return self.img.size()
     
-
+def parabole_test():
+    nf = "Paraboles"
+    cv2.namedWindow(nf, cv2.WND_PROP_FULLSCREEN)
+    cv2.setWindowProperty(nf, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+    m = 10
+    class prb:
+        a=0
+        b=0
+        c=0
+        p=0
+    def get_a(v): prb.a=v
+    def get_b(v): prb.b=v
+    def get_c(v): prb.c=v
+    def get_puissance(v): prb.p=v
+    cv2.createTrackbar("a", nf, 0, m, get_a)
+    cv2.setTrackbarMin("a", nf, -m)
+    cv2.createTrackbar("b", nf, 0, m, get_b)
+    cv2.setTrackbarMin("b", nf, -m)
+    cv2.createTrackbar("c", nf, 0, m, get_c)
+    cv2.setTrackbarMin("c", nf, -m)
+    cv2.createTrackbar("puissance", nf, 0, m, get_puissance)
+    t = 20; fs = True
+    img = image(nf, img=image.new_img(fond=col.white))
+    for x in range(0, 1920, t): img.ligne([x,0], [x,1080], col.noir, 1, 2)
+    for y in range(0, 1080, t): img.ligne([0,y], [1920,y], col.noir, 1, 2)
+    img_s = copy.deepcopy(img.img)
+    while True:
+        img.set_img(img_s)
+        img.parabole(prb.a*t, prb.b*t, prb.c*t, prb.p, col.red, 10)
+        wk = img.montre(attente=1, fullscreen=fs)
+        match wk:
+            case 27: break
+            case 8: fs = not fs
+        if img.is_closed(): break
 if __name__ == '__main__':
-    img = image('Test')
-    pt = pt_sg([0, 0], screen)
-    img.ellipse(pt, [500, 100], col.magenta, 10)
-    img.ligne([0, 0], screen, col.white, 10)
-    img.cercle([0, 0], 100, col.red, 0)
-    img.cercle(screen, 1000, col.red, 0)
-    img.montre(fullscreen=True)
+    class s:
+        v = 0
+    def get_s(v): s.v = v
+    p1 = [500, 500]
+    p2 = [1000, 700]
+    a,b=500,-300
+    p3 = [p1[0]+a, p1[1]+b]
+    p4 = [p2[0]+a, p2[1]+b]
+    m=round(dist(p1, p2))
+    nf = "Test"
+    cv2.namedWindow(nf, cv2.WND_PROP_FULLSCREEN)
+    cv2.setWindowProperty(nf, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+    cv2.createTrackbar("Sagitta", nf, 0, m, get_s)
+    cv2.setTrackbarMin("Sagitta", nf, -m)
+    fs = True
+    while True:
+        img = image(nom=nf)
+        pt = pt_sg([0, 0], screen)
+        img.ellipse(pt, [500, 100], col.magenta, 10, 2)
+        img.ligne([0, 0], screen, col.white, 10, 2)
+        img.cercle([0, 0], 100, col.red, 0, 2)
+        img.cercle(screen, 1000, col.red, 0, 2)
+        
+        for p in [p1,p2,p3,p4]: img.cercle(p, 15, col.new("800080"), 0, 2)
+        img.arc(p1, p2, s.v, col.green, 10, 2)
+        img.arc2(p3, p4, s.v, col.green, 10, 2)
+        wk = img.montre(fullscreen=fs, attente=1)
+        if wk == 27: break
+        elif wk == 8: fs=not fs
+    
