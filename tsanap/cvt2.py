@@ -151,6 +151,23 @@ class image:
                     if wk<1000:
                         tin+=chr(wk)
         return tin
+    def visual_input_option(self, texte, ct, opotions=["a", "b"], couleur=col.red, epaisseur=1, taille=1, police=cv2.FONT_HERSHEY_SCRIPT_COMPLEX, lineType=0, fullscreen=False) -> str | None:
+        tin = "" # Text input
+        while True:
+            img_s = image(nom=self.nom, img=copy.deepcopy(self.img))
+            img_s.ecris(texte+tin, ct, couleur=couleur, epaisseur=epaisseur, taille=taille, police=police, lineType=lineType)
+            wk = img_s.montre(1, False, fullscreen)
+            match wk:
+                case 27: return None
+                case 8: tin=tin[:-1:]
+                case 9: pass ## tab -> TODO 
+                case 32: tin += ""
+                case 13: break
+                case -1: pass
+                case _:
+                    if wk<1000:
+                        tin+=chr(wk)
+        return tin
     def ferme(self) -> None:
         cv2.destroyWindow(self.nom)
     def imprime(self, ordre=True) -> None:
