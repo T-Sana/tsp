@@ -213,7 +213,7 @@ class image:
         else:
             a = angleEntrePoints(pa, pb) + 180; sagitta = abs(sagitta)
         ct = ct_sg(pa, pb)
-        img.ellipse(ct, [dist(pa, pb)/2, sagitta], col, ep, lineType, 0, 180, a)
+        self.ellipse(ct, [dist(pa, pb)/2, sagitta], col, ep, lineType, 0, 180, a)
         return
     def sauve_image(self, path='', nom_fichier=None) -> None:
         if nom_fichier == None: nom_fichier = self.nom
