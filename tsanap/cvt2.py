@@ -215,19 +215,17 @@ class image:
         ct = ct_sg(pa, pb)
         self.ellipse(ct, [dist(pa, pb)/2, sagitta], col, ep, lineType, 0, 180, a)
         return
-    def arc2(self, pa, pb, sagitta, col=col.noir, ep=1, lineType=0) -> None:
-        s=sagitta
+    def arc2(self, pa, pb, sagitta, col=col.noir, ep=1, lineType=0) -> None: ## TODO : Fix imprecisions quand (|sagitta|<20 && sagitta != 0)
+        s=sagitta;ct=ct_sg(pa,pb);d=dist(pa,pb)/2
+        if abs(s)>d: return self.arc(pa,pb,s,col,ep,lineType)
         if s==0:return self.ligne(pa,pb,col,ep,lineType)
         elif s>0:a=angleEntrePoints(pa,pb)
         else:a=angleEntrePoints(pa,pb)+180;s=abs(s)
-        ct=ct_sg(pa,pb);d=dist(pa,pb)
-        ctc = coosCercle(ct, s*2, a+90)
-        
-        r = d/2+s
-        self.cercle(ct,8,[255,0,0],0,2) ## ct ##
-        self.cercle(ctc,r,col,ep/3,2)
-        
-        return
+        x = ((d**2-s**2)/2)/s; r = x+s
+        ctc = coosCercle(ct, x, a-90)
+        a1,a2 = angleEntrePoints(ctc,pa), angleEntrePoints(ctc,pb)
+        a_ = 360 if diff(a1,a2)>180 else 0
+        return self.ellipse(ctc,(r,r), col, ep, lineType, min(a1,a2)+a_, max(a1,a2), 180)
     def parabole(self, a=1, b=0, c=0, puissance=2, couleur=col.bleu, epaisseur=10): ## TODO !!! ##
         p = puissance
         b = 0 - b
@@ -359,7 +357,7 @@ def parabole_test():
             case 27: break
             case 8: fs = not fs
         if img.is_closed(): break
-if __name__ == '__main__':
+def arc2_test():
     class s:
         v = 0
     def get_s(v): s.v = v
@@ -372,21 +370,34 @@ if __name__ == '__main__':
     nf = "Test"
     cv2.namedWindow(nf, cv2.WND_PROP_FULLSCREEN)
     cv2.setWindowProperty(nf, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-    cv2.createTrackbar("Sagitta", nf, 0, m, get_s)
+    cv2.createTrackbar("Sagitta", nf, 1, m, get_s)
     cv2.setTrackbarMin("Sagitta", nf, -m)
     fs = True
     while True:
-        img = image(nom=nf)
-        pt = pt_sg([0, 0], screen)
-        img.ellipse(pt, [500, 100], col.magenta, 10, 2)
-        img.ligne([0, 0], screen, col.white, 10, 2)
-        img.cercle([0, 0], 100, col.red, 0, 2)
-        img.cercle(screen, 1000, col.red, 0, 2)
-        
+        img = image(nf, img=demo(False))
         for p in [p1,p2,p3,p4]: img.cercle(p, 15, col.new("800080"), 0, 2)
         img.arc(p1, p2, s.v, col.green, 10, 2)
         img.arc2(p3, p4, s.v, col.green, 10, 2)
         wk = img.montre(fullscreen=fs, attente=1)
         if wk == 27: break
         elif wk == 8: fs=not fs
-    
+        if img.is_closed(): break
+    return
+def demo(exec=True):
+    img = image(nom="Demo")
+    pt = pt_sg([0, 0], screen)
+    img.ellipse(pt, [500, 100], col.magenta, 10, 2)
+    img.ligne([0, 0], screen, col.white, 10, 2)
+    img.cercle([0, 0], 100, col.red, 0, 2)
+    img.cercle(screen, 1000, col.red, 0, 2)
+    fs = True
+    while exec:
+        wk = img.montre(fullscreen=fs, attente=1)
+        match wk:
+            case 27: break
+            case 8: fs = not fs
+            case 32: print(img.nom, end="\r")
+        if img.is_closed(): break
+    return img
+if __name__ == '__main__':
+    arc2_test()

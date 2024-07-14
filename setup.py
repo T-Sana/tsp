@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.0.18' 
+VERSION = '0.0.19' 
 DESCRIPTION = 'T-Sana\'s package'
 LONG_DESCRIPTION = 'A package to create images, manage files and more.'
 
