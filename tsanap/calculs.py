@@ -169,7 +169,7 @@ def points_segment(p1, p2):
             for i in numbs:
                 out.append([xa, yb + i])
     else:
-        xc = np.linspace(xa, xb, max(abs(xa - xb), abs(ya - yb)))
+        xc = np.linspace(round(xa), round(xb), round(max(abs(xa - xb), abs(ya - yb))))
         yc = (yb - ya) / (xb - xa) * (xc - xa) + ya
         yc = [round(c) for c in yc]
         pos = 0
