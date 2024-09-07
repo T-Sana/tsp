@@ -1,5 +1,5 @@
 import os
-def create_dir_if_unexisting(name, path='./') -> bool:
+def create_dir_if_unexisting(name, path='./', h=False) -> bool:
     '''
     :name: name of the file/folder to check existance of\n
     :path: where the file is supposed to be and would be created the file
@@ -7,7 +7,7 @@ def create_dir_if_unexisting(name, path='./') -> bool:
     :bool: of if it was created or not
     '''
     v_dir = os.listdir(path)
-    print('\n'.join(i for i in v_dir))
+    if h: print('\n'.join(i for i in v_dir))
     try: v_dir.index(name); return False
     except: os.mkdir(f"{path}/{name}"); return True
 def remove_dir(name, path='./'):
