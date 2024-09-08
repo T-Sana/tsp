@@ -1,8 +1,10 @@
 # Required packages:
 # >>> opencv-python
+# >>> multimethod
 # >>> numpy
 # >>> sty
 
+from multimethod import multimethod
 import numpy as np, cv2, random as rd, copy, time, os
 from sty import Style, RgbFg, fg
 
