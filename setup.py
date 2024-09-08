@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.0.20' 
+VERSION = '0.0.21' 
 DESCRIPTION = 'T-Sana\'s package'
 LONG_DESCRIPTION = 'A package to create images, manage files and more.'
 
@@ -12,7 +12,7 @@ setup(
         description=DESCRIPTION,
         long_description=LONG_DESCRIPTION,
         packages=find_packages(),
-        install_requires=["numpy", "opencv-python", "sty"],
+        install_requires=["numpy", "opencv-python", "sty", "multimethod"],
         keywords=['python', 'image'],
         classifiers= [
             "Programming Language :: Python :: 3",
